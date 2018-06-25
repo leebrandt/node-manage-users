@@ -38,8 +38,15 @@ app.use(session({
 }))
 
 app.use(oidc.router)
+const okta = require('./okta')
+app.use(okta.middleware)
+
 app.use('/', indexRouter)
 app.use('/dashboard', oidc.ensureAuthenticated(), dashboardRouter)
+
+const profileRouter = require('./routes/profile')
+app.use('/profile', oidc.ensureAuthenticated(), profileRouter)
+
 app.use('/register', registrationRouter)
 app.use('/reset-password', resetPassword)
 app.get('/logout', (req, res) => {
